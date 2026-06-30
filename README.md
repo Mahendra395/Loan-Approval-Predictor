@@ -1,39 +1,45 @@
-# Loan Approval Prediction
-This project implements various machine learning models to predict loan approval risk. The models are trained on a dataset containing both numerical and categorical features, with a focus on handling class imbalance using SMOTE and ensemble techniques.
+# Loan Approval Risk Prediction
+
+This project implements various advanced Machine Learning models to predict loan approval risk. The models are trained on a comprehensive dataset containing both numerical and categorical features. Special focus has been placed on handling severe class imbalance using SMOTE, downsampling, and state-of-the-art ensemble techniques.
 
 ## Overview
-The goal of this project is to predict whether a loan applicant is at risk (denoted by the Risk_Flag column) using various machine learning models. The models include:<br>
-XGBoost<br>
-RandomForestClassifier<br>
-CatBoost<br>
-BalancedRandomForestClassifier<br>
-RUSBoostClassifier<br>
-Stacking Classifier<br>
-The dataset used is heavily imbalanced, and techniques like SMOTE and class weighting are employed to handle this issue.
+The primary objective of this project is to accurately predict whether a loan applicant poses a default risk (indicated by the `Risk_Flag` column). To achieve high precision and recall on the minority class, the following models have been implemented and compared:
+* XGBoost
+* RandomForestClassifier
+* CatBoost
+* BalancedRandomForestClassifier
+* RUSBoostClassifier
+* Stacking Classifier (Ensemble)
+
+Since the dataset is heavily imbalanced (skewed towards non-defaulters), specialized techniques like SMOTE, class-weighting, and custom sampling classifiers are utilized to maximize model performance.
 
 ## Dataset
-The dataset contains the following features:<br>
-**Numerical:** Various financial and demographic data.<br>
-**Categorical:** Information such as profession, gender, and city.<br>
-The target variable is Risk_Flag, indicating whether an applicant is at risk of loan default.
+The dataset comprises both structural financial data and applicant demographics:
+* **Numerical Features:** Income, Age, Experience, Current_Job_Yrs, Current_House_Yrs, etc.
+* **Categorical Features:** Profession, Gender, City, State, Marital Status, House_Ownership, and Car_Ownership.
+* **Target Variable:** `Risk_Flag` (1 indicates high default risk, 0 indicates low risk/approved).
 
-## Preprocessing
-**Feature Scaling:** Numerical features are scaled using StandardScaler.<br>
-**Encoding:** Categorical features are one-hot encoded.<br>
-**Dimensionality Reduction:** Truncated SVD is applied to reduce the dimensionality of the data.<br>
-**Handling Imbalance:** SMOTE is used to oversample the minority class.<br>
+## Preprocessing & Pipeline
+To prepare the data for the algorithms, a robust data preprocessing pipeline was built:
+* **Feature Scaling:** Applied `StandardScaler` to ensure numerical variables are on the same scale.
+* **Categorical Encoding:** One-Hot Encoding used to convert categorical strings into machine-readable format.
+* **Dimensionality Reduction:** Applied `TruncatedSVD` to reduce the high dimensionality caused by one-hot encoding without losing significant variance.
+* **Class Imbalance Mitigation:** Utilized Synthetic Minority Over-sampling Technique (`SMOTE`) to intelligently balance the target class distribution.
 
-## Modeling
-Several models are trained and evaluated:<br>
-**XGBoost, RandomForestClassifier, and CatBoost:** Trained with and without SMOTE.<br>
-**BalancedRandomForestClassifier and RUSBoostClassifier:** Specifically designed for handling imbalanced data.<br>
-**Stacking Classifier:** Combines the predictions of XGBoost, RandomForest, and CatBoost for a final prediction.<br>
+## Modeling Strategy
+The evaluation is split into multiple stages to find the absolute best predictor:
+1. **Standard Classifiers:** XGBoost, RandomForest, and CatBoost were trained initially on the raw data, and then fine-tuned after applying `SMOTE`.
+2. **Imbalanced-Specific Classifiers:** `BalancedRandomForestClassifier` and `RUSBoostClassifier` were tested to natively handle the skewed weights.
+3. **Hybrid Ensemble (Stacking):** A `StackingClassifier` meta-model was created by combining the predictions of the top-performing base estimators (XGBoost, RandomForest, and CatBoost) to optimize final accuracy and F1-score.
 
-## Evaluation
-The models are evaluated using:<br>
-**Confusion Matrix:** To visualize the performance of each class.<br>
-**Classification Report:** Provides precision, recall, f1-score, and support for each class.<br>
-**Cross-Validation Accuracy:** Evaluates the model's performance across different folds of the data.
+## Evaluation Metrics
+Models are strictly scrutinized based on metrics that matter for imbalanced data:
+* **Confusion Matrix:** To track False Positives and False Negatives closely.
+* **Classification Report:** Detailed analysis of Precision, Recall, and F1-Score (specifically focusing on Class 1).
+* **Stratified Cross-Validation:** To verify consistency and prevent overfitting across different folds of data.
+
+---
+**Author:** mahendrasiyag
 
 
 
